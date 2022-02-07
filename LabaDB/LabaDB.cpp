@@ -1,33 +1,26 @@
 ﻿#include <iostream>
-#include "Structures.h"
+
 #include "Buyer.h"
 #include "Item.h"
 #include <map>
 
 
+
 void allInfo();
 bool checkKeyPairUniqueness(Buyer& buyer, int itemId);
+void menu(int& request);
+int sbSize();
+Buyer buyer_info;
 
 int main()
 {
     Buyer buyer;
     Item item;
-
     while (true) {
         std::string temp = "";
         int request = 0;
         int id = 0, item_id = 0, price = 0;
-        std::cout << "Choose one of the commands:\n" <<
-            "0 - Get buyer,\n" <<
-            "1 - Get item,\n" <<
-            "2 - Delete buyer,\n" <<
-            "3 - Delete item,\n" <<
-            "4 - Update buyer,\n" <<
-            "5 - Update item,\n" <<
-            "6 - Insert buyer,\n" <<
-            "7 - Insert item,\n" <<
-            "8 - Get info about DB" << std::endl;
-        std::cin >> request;
+        menu(request);
         switch (request) {
         case 0:
             
@@ -161,7 +154,10 @@ int main()
         case 8:
             allInfo();
             break;
+        case 9:
+            return 0;
         }
+
     }
 }
 bool checkKeyPairUniqueness(Buyer& buyer,int itemId)
@@ -202,34 +198,38 @@ void menu(int& request) {
         "5 - Update item,\n" <<
         "6 - Insert buyer,\n" <<
         "7 - Insert item,\n" <<
-        "8 - Get info about DB" << std::endl;
+        "8 - Get info about DB,\n" <<
+        "9 - Exit" << std::endl;
     std::cin >> request;
 }
-void allInfo() {
+int sbSize() {
     FILE* buyer_index = fopen(BUYER_INDEX, "rb");
     if (buyer_index == nullptr) {
         std::cout << "There are no buyers yet in the DB" << std::endl;
-        return;
+        return 0;
     }
     fseek(buyer_index, 0, SEEK_END);
     int64_t tableSize = ftell(buyer_index);
     if (!tableSize) {
         std::cout << "There are no buyers yet in the DB" << std::endl;
-        return;
+        return 0;
     }
-    Index index;
-    Buyer buyer;
-    std::map<int, int> info;
-   
-    fseek(buyer_index, 0, SEEK_SET);
     fclose(buyer_index);
-    int indAmount = tableSize / sizeof(Index);
+    return tableSize / sizeof(Index);
+}
+void allInfo() {
+
+    std::map<int, int> info;
+
+    int indAmount = sbSize();
+   
     for (int i = 1; i <= indAmount; ++i) {
-        if (getBuyer(buyer, i)) {
-            info[i] = buyer.itemsCount;
+        if (getBuyer(buyer_info, i)) {
+            info[i] = buyer_info.itemsCount;
         }
     }
     for (const auto& [key, value] : info) {
         std::cout << "Buyer with ID " << key << " has " << value << " items." << std::endl;
     }
+    
 }

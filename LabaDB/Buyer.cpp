@@ -42,9 +42,9 @@ void addBuyerToGarbage(Buyer& buyer) {
 	fclose(garbage);
 }
 bool getBuyer(Buyer& buyer, int id) {
-	FILE* buyer_db = fopen(BUYER_DATA, "r+b");
-	FILE* buyer_index = fopen(BUYER_INDEX, "r+b");
-	if (buyer_db == nullptr || buyer_index == nullptr) {
+	FILE* buyer_db = fopen(BUYER_DATA, "rb");
+	FILE* buyer_index = fopen(BUYER_INDEX, "rb");
+	if (buyer_db == NULL || buyer_index == NULL) {
 		return false;
 	}
 	fseek(buyer_index, 0, SEEK_END);
@@ -81,6 +81,8 @@ bool deleteBuyer(Buyer& buyer) {
 	fseek(buyer_index, 0, SEEK_END);
 	int64_t tableSize = ftell(buyer_index);
 	if (!tableSize || buyer.id * sizeof(Index) > tableSize) {
+		fclose(buyer_db);
+		fclose(buyer_index);
 		return false;
 	}
 	Index index;
@@ -124,6 +126,8 @@ bool updateBuyer(Buyer& buyer) {
 	fseek(buyer_index, 0, SEEK_END);
 	int64_t tableSize = ftell(buyer_index);
 	if (!tableSize || id * sizeof(Index) > tableSize) {
+		fclose(buyer_index);
+		fclose(buyer_db);
 		return false;
 	}
 	
@@ -132,6 +136,8 @@ bool updateBuyer(Buyer& buyer) {
 	fread(&index, sizeof(Index), 1, buyer_index);
 
 	if (!index.ifExist) {
+		fclose(buyer_index);
+		fclose(buyer_db);
 		return false;
 	}
 

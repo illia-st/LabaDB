@@ -120,7 +120,7 @@ bool getItem(Buyer& buyer, Item& item ,int item_id) {
 
 	for (int i = 0; i < buyer.itemsCount; ++i) {
 		if (item.itemId == item_id) {
-
+			fclose(db);
 			return true;
 		}
 		fseek(db, item.nextAddress, SEEK_SET);
@@ -151,7 +151,7 @@ void makeLinks(Buyer& buyer, Item& prev, Item& item_to_delete, FILE * db) {
 		fwrite(&prev, sizeof(Item), 1, db);
 	}
 }
-bool deleteItem(Buyer& buyer, Item& item) {// якщо ми дійшли до виконання цієї функції, то ми точно знаємо, що такі записи існують
+void deleteItem(Buyer& buyer, Item& item) {// якщо ми дійшли до виконання цієї функції, то ми точно знаємо, що такі записи існують
 	FILE* db = fopen(ITEM_DATA, "r+b");
 	Item prev;
 	fseek(db, buyer.firstItemAddress, SEEK_SET);
@@ -174,5 +174,5 @@ bool deleteItem(Buyer& buyer, Item& item) {// якщо ми дійшли до виконання цієї ф
 
 	buyer.itemsCount -= 1;
 	updateBuyer(buyer);
-	return true;
+	
 }
