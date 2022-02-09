@@ -2,24 +2,47 @@
 #include "Item.h"
 #include <vector>
 #include <cstdint>
+#include <iostream>
 
 
-void rebornBuyer(FILE* garbage, int& garbageCount, Buyer& buyer) {
-	std::vector<int64_t> deletedItems(garbageCount);
+void rebornBuyer(FILE* garbage, Buyer& buyer, int& garbageCount) {
+	std::vector<int> deletedItems(garbageCount);
 	for (int i = 0; i < garbageCount; ++i) {
-		fread(&deletedItems[i], sizeof(int64_t), 1, garbage);
+		fread(&deletedItems[i], sizeof(int), 1, garbage);
 	}
 	buyer.id = deletedItems[0];
 	
 
 	fclose(garbage);
-	garbage = fopen(ITEM_GARBAGE, "wb");
+	garbage = fopen(BUYER_GARBAGE, "wb");
 	--garbageCount;
 	fwrite(&garbageCount, sizeof(int), 1, garbage);
 	for (int i = 1; i <= garbageCount; ++i) {
-		fwrite(&deletedItems[i], sizeof(int64_t), 1, garbage);
+		fwrite(&deletedItems[i], sizeof(int), 1, garbage);
 	}
 	fclose(garbage);
+}
+void printGarbage() {
+	FILE* garbage = fopen(BUYER_GARBAGE, "wb");
+	int garbageCount = 4;
+	std::cout << "ids is the garbage: ";
+	for (int i = 0; i < garbageCount; ++i) {
+		int temp = 0;
+		fread(&temp, sizeof(int), 1, garbage);
+		std::cout << temp << " ";
+	}
+	std::cout << std::endl;
+}
+void printGarbage_() {
+	FILE* garbage = fopen(BUYER_GARBAGE, "rb");
+	int garbageCount = 4;
+	std::cout << "ids is the garbage: ";
+	for (int i = 0; i < garbageCount; ++i) {
+		int temp = 0;
+		fread(&temp, sizeof(int), 1, garbage);
+		std::cout << temp << " ";
+	}
+	std::cout << std::endl;
 }
 void addBuyerToGarbage(Buyer& buyer) {
 	int garbageCount = 0;
@@ -27,18 +50,18 @@ void addBuyerToGarbage(Buyer& buyer) {
 	fread(&garbageCount, sizeof(int), 1, garbage);
 
 
-	std::vector<int64_t> deletedBuyers(garbageCount);
+	std::vector<int> deletedBuyers(garbageCount);
 	for (int i = 0; i < garbageCount; ++i) {
-		fread(&deletedBuyers[i], sizeof(int64_t), 1, garbage);
+		fread(&deletedBuyers[i], sizeof(int), 1, garbage);
 	}
 	fclose(garbage);
 	garbage = fopen(BUYER_GARBAGE, "wb");
 	++garbageCount;
 	fwrite(&garbageCount, sizeof(int), 1, garbage);// мб помилка
 	for (int i = 0; i < garbageCount - 1; ++i) {
-		fwrite(&deletedBuyers[i], sizeof(int64_t), 1, garbage);
+		fwrite(&deletedBuyers[i], sizeof(int), 1, garbage);
 	}
-	fwrite(&buyer.id, sizeof(int64_t), 1, garbage);
+	fwrite(&buyer.id, sizeof(int), 1, garbage);
 	fclose(garbage);
 }
 bool getBuyer(Buyer& buyer, int id) {
@@ -157,7 +180,7 @@ void insertBuyer(Buyer& buyer) {
 	fread(&garbageCount, sizeof(int), 1, garbage);
 	Index index;
 	if (garbageCount) {
-		rebornBuyer(garbage, garbageCount, buyer);
+		rebornBuyer(garbage, buyer, garbageCount);
 		fclose(buyer_index);
 		fclose(buyer_db);
 		buyer_index = fopen(BUYER_INDEX, "r+b");

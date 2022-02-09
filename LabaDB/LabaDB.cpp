@@ -6,16 +6,17 @@
 
 
 
-void allInfo();
-bool checkKeyPairUniqueness(Buyer& buyer, int itemId);
 void menu(int& request);
+bool checkKeyPairUniqueness(Buyer& buyer, int itemId);
+void allInfo(Buyer& buyer);
 int sbSize();
-Buyer buyer_info;
+
 
 int main()
 {
     Buyer buyer;
     Item item;
+    
     while (true) {
         std::string temp = "";
         int request = 0;
@@ -28,6 +29,7 @@ int main()
             std::cin >> id;
             if (getBuyer(buyer, id)) {
                 std::cout << "Correct" << std::endl;
+                std::cout << "Buyers's name is " << buyer.name << std::endl;
             }
             break;
         case 1:
@@ -50,6 +52,7 @@ int main()
             else {
                 std::cout << "No buyer" << std::endl;
             }
+            std::cout << "=====================" << std::endl;
             break;
         case 2:
             
@@ -60,11 +63,12 @@ int main()
                     std::cout << "Correct" << std::endl;
                     break;
                 }
-                std::cout << "Pizda" << std::endl;
+                std::cout << "Error" << std::endl;
             }
             else {
                 std::cout << "No buyer" << std::endl;
             }
+            std::cout << "=====================" << std::endl;
             break;
         case 3:
             
@@ -84,6 +88,7 @@ int main()
             else {
                 std::cout << "No buyer" << std::endl;
             }
+            std::cout << "=====================" << std::endl;
             break;
         case 4:
             std::cout << "Enter the buyer's id: ";
@@ -94,13 +99,16 @@ int main()
                 buyer.name = temp;
                 if (updateBuyer(buyer)) {
                     std::cout << "Correct" << std::endl;
+                    std::cout << "Buyer's name is " << buyer.name << std::endl;
+                    std::cout << "Buyer's id is " << buyer.id << std::endl;
                     break;
                 }
-                std::cout << "Pizda" << std::endl;
+                std::cout << "Error" << std::endl;
             }
             else {
                 std::cout << "No buyer" << std::endl;
             }
+            std::cout << "=====================" << std::endl;
             break;
         case 5:
             std::cout << "Enter the buyer's id: ";
@@ -118,11 +126,12 @@ int main()
                     
                     break;
                 }
-                std::cout << "Pizda" << std::endl;
+                std::cout << "No Item" << std::endl;
             }
             else {
                 std::cout << "No buyer" << std::endl;
             }
+            std::cout << "=====================" << std::endl;
             break;
         case 6:
             std::cout << "Enter the buyer's name: ";
@@ -131,6 +140,7 @@ int main()
 
             insertBuyer(buyer);
             std::cout << buyer.id << std::endl;
+            std::cout << "=====================" << std::endl;
             break;
         case 7:
             
@@ -150,11 +160,14 @@ int main()
                     std::cout << item.itemId << std::endl;
                 }
             }
+            std::cout << "=====================" << std::endl;
             break;
         case 8:
-            allInfo();
+            allInfo(buyer);
+            std::cout << "=====================" << std::endl;
             break;
         case 9:
+            exit(1);
             return 0;
         }
 
@@ -190,16 +203,17 @@ bool checkKeyPairUniqueness(Buyer& buyer,int itemId)
 }
 void menu(int& request) {
     std::cout << "Choose one of the commands:\n" <<
-        "0 - Get buyer,\n" <<
-        "1 - Get item,\n" <<
-        "2 - Delete buyer,\n" <<
-        "3 - Delete item,\n" <<
-        "4 - Update buyer,\n" <<
-        "5 - Update item,\n" <<
-        "6 - Insert buyer,\n" <<
-        "7 - Insert item,\n" <<
-        "8 - Get info about DB,\n" <<
-        "9 - Exit" << std::endl;
+        "0 - Get buyer,\n"                       <<
+        "1 - Get item,\n"                        <<
+        "2 - Delete buyer,\n"                    <<
+        "3 - Delete item,\n"                     <<
+        "4 - Update buyer,\n"                    <<
+        "5 - Update item,\n"                     <<
+        "6 - Insert buyer,\n"                    <<
+        "7 - Insert item,\n"                     <<
+        "8 - Get info about DB,\n"               <<
+        "9 - Exit\n"                             <<
+        "> ";
     std::cin >> request;
 }
 int sbSize() {
@@ -217,15 +231,15 @@ int sbSize() {
     fclose(buyer_index);
     return tableSize / sizeof(Index);
 }
-void allInfo() {
+void allInfo(Buyer& buyer) {
 
     std::map<int, int> info;
 
     int indAmount = sbSize();
    
     for (int i = 1; i <= indAmount; ++i) {
-        if (getBuyer(buyer_info, i)) {
-            info[i] = buyer_info.itemsCount;
+        if (getBuyer(buyer, i)) {
+            info[i] = buyer.itemsCount;
         }
     }
     for (const auto& [key, value] : info) {
