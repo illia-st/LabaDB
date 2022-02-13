@@ -10,8 +10,8 @@ struct Item {
 	int buyerId;
 	int price;
 	bool ifExist;
-	int64_t address;
-	int64_t nextAddress;
+	int32_t address;
+	int32_t nextAddress;
 };
 
 bool getItem(Buyer& buyer, Item& item, int item_id);

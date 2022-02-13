@@ -57,7 +57,7 @@ void addBuyerToGarbage(Buyer& buyer) {
 	fclose(garbage);
 	garbage = fopen(BUYER_GARBAGE, "wb");
 	++garbageCount;
-	fwrite(&garbageCount, sizeof(int), 1, garbage);// мб помилка
+	fwrite(&garbageCount, sizeof(int), 1, garbage);
 	for (int i = 0; i < garbageCount - 1; ++i) {
 		fwrite(&deletedBuyers[i], sizeof(int), 1, garbage);
 	}

@@ -10,14 +10,14 @@ struct Buyer
 	int id;
 	int itemsCount = 0;
 	std::string name;
-	int64_t firstItemAddress = -1;
+	int32_t firstItemAddress = -1;
 	~Buyer() {
 		name.clear();
 	}
 };
 struct Index {
 	int id;
-	int64_t address;
+	int32_t address;
 	bool ifExist;
 };
 bool getBuyer(Buyer& buyer, int id);

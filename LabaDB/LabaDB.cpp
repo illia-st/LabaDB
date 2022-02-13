@@ -7,7 +7,7 @@
 
 
 void menu(int& request);
-bool checkKeyPairUniqueness(Buyer& buyer, int itemId);
+bool checkUnique(Buyer& buyer, int itemId);
 void allInfo(Buyer& buyer);
 int sbSize();
 
@@ -28,7 +28,6 @@ int main()
             std::cout << "Enter the buyer's id: ";
             std::cin >> id;
             if (getBuyer(buyer, id)) {
-                std::cout << "Correct" << std::endl;
                 std::cout << "Buyers's name is " << buyer.name << std::endl;
             }
             break;
@@ -43,7 +42,7 @@ int main()
                 std::cin >> item_id;
 
                 if (getItem(buyer, item, item_id)) {
-                    std::cout << "Correct" << std::endl;
+                    std::cout << "Items's price is " << item.price << std::endl;
                 }
                 else {
                     std::cout << "No item" << std::endl;
@@ -60,7 +59,7 @@ int main()
             std::cin >> id;
             if (getBuyer(buyer, id)) {
                 if (deleteBuyer(buyer)) {
-                    std::cout << "Correct" << std::endl;
+                    std::cout << "The buyer with ID " << buyer.id << " has been deleted from the DB" << std::endl;
                     break;
                 }
                 std::cout << "Error" << std::endl;
@@ -80,7 +79,7 @@ int main()
                 std::cin >> item_id;
                 if (getItem(buyer, item, item_id)) {
                     deleteItem(buyer, item);
-                    std::cout << "Correct" << std::endl;
+                    std::cout << "The item is with id" << item.itemId << " has been deleted from the DB" << std::endl;
                     break;
                 }
                 std::cout << "No item" << std::endl;
@@ -122,7 +121,7 @@ int main()
                     std::cin >> price;
                     item.price = price;
                     updateItem(item);
-
+                    std::cout << "A new item's price is " << item.price << std::endl;
                     
                     break;
                 }
@@ -139,7 +138,8 @@ int main()
             buyer.name = temp;
 
             insertBuyer(buyer);
-            std::cout << buyer.id << std::endl;
+            std::cout << "A new buyer has been added into the DB" << std::endl;
+            std::cout << "A new buyer's ID is " << buyer.id << std::endl;
             std::cout << "=====================" << std::endl;
             break;
         case 7:
@@ -147,17 +147,17 @@ int main()
             std::cout << "Enter the buyer's id: ";
             std::cin >> id;
             if (getBuyer(buyer, id)) {
-                int price = 0;
                 std::cout << "Enter the item's price: ";
                 std::cin >> price;
                 std::cout << "Enter the item's id: ";
                 std::cin >> item_id;
                 item.buyerId = id;
                 item.price = price;
-                if (checkKeyPairUniqueness(buyer, item_id)) {
+                if (checkUnique(buyer, item_id)) {
                     item.itemId = item_id;
                     insertItem(buyer, item);
-                    std::cout << item.itemId << std::endl;
+                    std::cout << "A new item has been added into the DB for the buyer with ID " << buyer.id << std::endl;
+                    std::cout << "A new item's ID is " << item.itemId << std::endl;
                 }
             }
             std::cout << "=====================" << std::endl;
@@ -173,7 +173,7 @@ int main()
 
     }
 }
-bool checkKeyPairUniqueness(Buyer& buyer,int itemId)
+bool checkUnique(Buyer& buyer,int itemId)
 {
     FILE* item_db = fopen(ITEM_DATA, "r+b");
     if (item_db == nullptr) {
@@ -219,19 +219,20 @@ void menu(int& request) {
 int sbSize() {
     FILE* buyer_index = fopen(BUYER_INDEX, "rb");
     if (buyer_index == nullptr) {
-        std::cout << "There are no buyers yet in the DB" << std::endl;
+        std::cout << "There are no info in the DB yet" << std::endl;
         return 0;
     }
     fseek(buyer_index, 0, SEEK_END);
     int64_t tableSize = ftell(buyer_index);
     if (!tableSize) {
-        std::cout << "There are no buyers yet in the DB" << std::endl;
+        std::cout << "There are no info in the DB yet" << std::endl;
         return 0;
     }
     fclose(buyer_index);
     return tableSize / sizeof(Index);
 }
 void allInfo(Buyer& buyer) {
+    bool flag = false;
 
     std::map<int, int> info;
 
@@ -243,7 +244,10 @@ void allInfo(Buyer& buyer) {
         }
     }
     for (const auto& [key, value] : info) {
+        flag = false;
         std::cout << "Buyer with ID " << key << " has " << value << " items." << std::endl;
     }
-    
+    if (!flag) {
+        std::cout << "There are no info in the DB yet" << std::endl;
+    }
 }
