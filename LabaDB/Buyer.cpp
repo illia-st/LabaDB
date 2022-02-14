@@ -22,28 +22,7 @@ void rebornBuyer(FILE* garbage, Buyer& buyer, int& garbageCount) {
 	}
 	fclose(garbage);
 }
-void printGarbage() {
-	FILE* garbage = fopen(BUYER_GARBAGE, "wb");
-	int garbageCount = 4;
-	std::cout << "ids is the garbage: ";
-	for (int i = 0; i < garbageCount; ++i) {
-		int temp = 0;
-		fread(&temp, sizeof(int), 1, garbage);
-		std::cout << temp << " ";
-	}
-	std::cout << std::endl;
-}
-void printGarbage_() {
-	FILE* garbage = fopen(BUYER_GARBAGE, "rb");
-	int garbageCount = 4;
-	std::cout << "ids is the garbage: ";
-	for (int i = 0; i < garbageCount; ++i) {
-		int temp = 0;
-		fread(&temp, sizeof(int), 1, garbage);
-		std::cout << temp << " ";
-	}
-	std::cout << std::endl;
-}
+
 void addBuyerToGarbage(Buyer& buyer) {
 	int garbageCount = 0;
 	FILE* garbage = fopen(BUYER_GARBAGE, "rb");

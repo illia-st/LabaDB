@@ -30,6 +30,9 @@ int main()
             if (getBuyer(buyer, id)) {
                 std::cout << "Buyers's name is " << buyer.name << std::endl;
             }
+            else {
+                std::cout << "There is no buyer with id " << id << " int the DB" << std::endl;
+            }
             break;
         case 1:
             

@@ -11,9 +11,7 @@ struct Buyer
 	int itemsCount = 0;
 	std::string name;
 	int32_t firstItemAddress = -1;
-	~Buyer() {
-		name.clear();
-	}
+	
 };
 struct Index {
 	int id;
@@ -24,5 +22,3 @@ bool getBuyer(Buyer& buyer, int id);
 bool deleteBuyer(Buyer& buyer);
 bool updateBuyer(Buyer& buyer);
 void insertBuyer(Buyer& buyer);
-void printGarbage();
-void printGarbage_();
