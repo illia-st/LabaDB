@@ -151,6 +151,8 @@ bool updateBuyer(Buyer& buyer) {
 	return true;
 }
 void insertBuyer(Buyer& buyer) {
+	buyer.firstItemAddress = -1;
+	buyer.itemsCount = 0;
 	FILE * buyer_index = fopen(BUYER_INDEX, "a+b");
 	FILE* buyer_db = fopen(BUYER_DATA, "a+b");
 	FILE* garbage = fopen(BUYER_GARBAGE, "a+b");

@@ -173,7 +173,6 @@ int main()
             exit(1);
             return 0;
         }
-
     }
 }
 bool checkUnique(Buyer& buyer,int itemId)
@@ -222,13 +221,11 @@ void menu(int& request) {
 int sbSize() {
     FILE* buyer_index = fopen(BUYER_INDEX, "rb");
     if (buyer_index == nullptr) {
-        std::cout << "There are no info in the DB yet" << std::endl;
         return 0;
     }
     fseek(buyer_index, 0, SEEK_END);
     int64_t tableSize = ftell(buyer_index);
     if (!tableSize) {
-        std::cout << "There are no info in the DB yet" << std::endl;
         return 0;
     }
     fclose(buyer_index);
@@ -247,7 +244,7 @@ void allInfo(Buyer& buyer) {
         }
     }
     for (const auto& [key, value] : info) {
-        flag = false;
+        flag = true;
         std::cout << "Buyer with ID " << key << " has " << value << " items." << std::endl;
     }
     if (!flag) {
